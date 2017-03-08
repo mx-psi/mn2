@@ -84,3 +84,10 @@ eulerm(f,a,b,tol) := block(
   ),
   float(new)
 )$
+
+
+/* Algoritmo de Horner, pedido en el ejercicio 13 */
+
+horner(p, x0) := block(
+  /* TODO */
+)$
