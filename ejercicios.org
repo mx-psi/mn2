@@ -1,0 +1,104 @@
+#+OPTIONS: tex:t
+#+STARTUP: latexpreview
+
+* Tema 1
+
+** Ejercicio 6
+*** a) Hallar las raíces
+Para hallar el término $x_{n+1}$ hay que sacar las raíces del polinomio:
+
+$$p(x) = f(x_n) + f'(x_n)(x - x_n) + \frac12f''(x_n)(x-x_n)^2$$
+
+Por tanto:
+
+$$x_{n+1} = x_n + \frac{-f'(x_n) \pm \sqrt{f'(x_n)^2 - 2f(x_n)f''(x_n)}}{f''(x_n)}$$
+
+*** b) ¿Qué raíz debemos escoger?
+
+Debemos llegar a un punto tal que $f(x^\ast) = 0$. Este será un punto fijo, es decir:
+
+$$x^\ast = x^\ast + \frac{-f'(x^\ast) \pm \sqrt{f'(x^\ast)^2 - 2f(x^\ast)f''(x^\ast)}}{f''(x^\ast)}$$
+
+Es decir, el término de la derecha debe anularse. Simplificando y haciendo $f(x^\ast) = 0$ tenemos que:
+
+$$-f'(x^\ast) \pm \sqrt{f'(x^\ast)^2} = 0$$
+
+Por tanto debemos escoger la raíz con símbolo $+$.
+
+*** c) Comprobación del método
+
+Si multiplicamos por el conjugado la expresión original:
+
+$$x_{n+1} = x_n - \frac{f'(x_n) - \sqrt{f'(x_n)^2 - 2f(x_n)f''(x_n)}}{f''(x_n)} \cdot \frac{f'(x_n) + \sqrt{f'(x_n)^2 - 2f(x_n)f''(x_n)}}{f'(x_n) + \sqrt{f'(x_n)^2 - 2f(x_n)f''(x_n)}}$$
+
+
+Simplificando:
+
+$$x_{n+1} = x_n - \frac{f'(x_n)^2 - f'(x_n)^2 + 2f(x_n)f''(x_n)}{(f'(x_n) + \sqrt{f'(x_n)^2 - 2f(x_n)f''(x_n)})f''(x_n)}$$
+
+Reordenando términos y sacando $f'(x_n)^2$:
+
+
+$$x_{n+1} = x_n - \frac{2}{1 + \sqrt{1 - 2\frac{f(x_n)f''(x_n)}{f'(x_n)^2}}}\frac{f(x_n)}{f'(x_n)}$$
+
+*** d)
+
+Hecho en Maxima. No converge.
+
+*** e)
+
+Sea $x^\ast$ el punto fijo de $f$. Existe $\xi$ tal que:
+
+$$f(x) = f(x_k) + f'(x_k)(x-x_k) + \frac12f''(x_k)(x-x_k)^2 + \frac16f'''(\xi)(\xi - x_k)^3$$
+
+Además:
+
+$$0 = f(x_k)+ f'(x_k)(x_{k+1}-x_k) + \frac12f''(x_k)(x_{k+1}-x_k)^2$$
+
+Restando una expresión a otra:
+
+$$0 = f'(x_k)(x-x_{k+1}) + \frac12f''(x_k)(x - x_{k+1})(x+ x_{k+1} - 2x_k) + \frac16f'''(\xi)(\xi - x_k)^3$$
+
+Sacamos factor común y despejamos:
+
+
+$$\left(f'(x_k) + \frac12f''(x_k)(x+ x_{k+1} - 2x_k)\right)(x-x_{k+1}) =  -\frac16f'''(\xi)(\xi - x_k)^3$$
+
+Tomamos valor absoluto y acotamos:
+
+$$|x-x_{k+1}| \leq \frac16\frac{|f'''(\xi)|}{\left|f'(x_k) + \frac12f''(x_k)(x+ x_{k+1} - 2x_k)\right|}|x - x_k|^3$$
+
+(Y a partir de aquí ni idea de cómo se seguía)
+
+
+
+** 9
+*** $x_{n+1} = 1 - \log x_n$
+Esta sucesión converge a un punto fijo de $1 - \log x_n$, es decir, un punto en el que:
+
+$$1 - \log x = x$$
+
+por lo que no sirve para resolver el problema.
+
+El *resto de sucesiones* si convergen lo hacen a un punto tal que $1 - \log x = 0$.
+
+*** $x_{n+1} = x_n + 1 - \log x_n$
+Consideramos la aplicación $g(x) = x + 1 - \log x$:
+
+Vemos que $|g'| < 1$ en $(0,+\infty)$ por lo que la aplicación es contractiva.
+
+Además, $g([2,3]) \subseteq [2,3]$
+
+*** $x_{n+1} = x_n - (1 - \log x_n)$ 
+
+Consideramos la aplicación $g(x) = x - (1 - \log x)$:
+
+Vemos que $|g'| > 1$ en $(0,+\infty)$ por lo que la aplicación *no* es contractiva.
+Por tanto *no* podemos aplicar el teorema del punto fijo.
+
+*** $x_{n+1} = x_n + (1 - \log x_n)/3$ 
+Consideramos la aplicación $g(x) = x + (1 - \log x)/3$:
+
+Vemos que $|g'| < 1$ en $(0,+\infty)$ por lo que la aplicación es contractiva.
+
+Además $g([2,3]) \subseteq [2,3]$
