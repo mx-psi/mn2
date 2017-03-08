@@ -1,0 +1,141 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 16.04.2 ] */
+
+/* [wxMaxima: input   start ] */
+load("Métodos.mac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+g(x):= %e^x-1;
+min:-2$  max:1$   tol:10^(-3)$
+metodo:biseccion$
+
+metodo(g,min,max,tol);
+plot2d(g(x),[x,min,max]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Ejercicio 1
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: comment start ]
+Tiene una única solución porque es monótona (f' > 0)
+en (0,+infinito) y f(1)*f(2) < 0
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g(x):= x^3 + 4*x^2 - 10;
+biseccion(g,1,2,10^(-5));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Para conseguir un error menor que 10^(-8) tenemos
+que hallar el menor n tal que (b-a)/2^(n+1) < 10^(-8)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ceiling(log((2-1)/10^(-8))/log(2) -1);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Ejercicio 3
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: subsect start ]
+a) 3x = 2+x^2-e*^x
+   [wxMaxima: subsect end   ] */
+
+/* [wxMaxima: comment start ]
+Tomamos como [a, b] el intervalo [0, 1/2].
+Dado que:
+ ·f(0)*f(1/2) < 0
+ ·f'(x) = 3-2x+e^x != 0 (e^x > 0 y 3 - 2x > 0)
+ ·f''(x) = -2+e^x < 0
+ ·f(0)f''(0) > 0
+el método de Newton-Raphson converge con x0 = 0 a la única raíz en [0, 1/2]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+f(x):=3*x-2-x^2+%e^x$
+newton_raphson(f,0,1/2,10^(-7));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: subsect start ]
+b) x^2+10cos(x)+x=0
+   [wxMaxima: subsect end   ] */
+
+/* [wxMaxima: comment start ]
+Tomamos [a, b] = [-4, -3].
+Se tiene que:
+ ·f(-4)*f(-3) < 0
+ ·f'(x) = 2x-10sen(x)+1 != 0 ya que sen(x) no está en [-0.7, -0.5]: es decreciente
+  y sen(-3) > -0.5
+ ·f''(x) != 0 porque los x tales que cos(x) = 1/5 son de la forma
+   +/-acos(1/5) + 2kpi con k entero, y no caen en el intervalo:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+makelist(float(acos(1/5)+2*k*%pi),k,-1,0);
+makelist(float(-acos(1/5)+2*k*%pi),k,-1,0);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+ ·f(-3)f''(-3) > 0
+el método de Newton-Raphson converge con x0 = -3 a la única raíz en [-4, -3]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+f(x):=x^2+10*cos(x)+x$
+define(ddf(x),diff(f(x),x, 2));
+float(f(-3));
+float(ddf(-3));
+newton_raphson(f,-4,-3,10^(-7));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Ejercicio 6
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: input   start ] */
+f(x) := x^3 - 3*x^2*2^(-x) + 3*x*4^(-x) - 8^(-x);
+newton_raphson(f,0,1,10^(-1));
+eulerm(f,0,1,10^(-1));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Ejercicio 9
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: input   start ] */
+itera(f,iters,tol,x0):=
+block([old:-inf,new:x0,n:0],
+    while n < iters do
+    (  old:new,
+       new:float(f(new)),
+       n:n+1,
+       if abs(new-old) < tol then return(float(new))),
+    float(new))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+g1(x) := 1 - log(x)$
+g2(x) := x + 1 - log(x)$
+g3(x) := x - (1 - log(x))$
+g4(x) := x + (1 - log(x))/3$
+its: 1000$
+tol: 10^(-4)$
+x_0: 1$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+float(%e);
+makelist(itera([g1,g2,g4][i],its,tol,x_0),i,1,3);
+itera(g3,its,tol,x_0);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Ejercicio 13
+   [wxMaxima: section end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
