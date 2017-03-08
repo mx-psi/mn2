@@ -1,0 +1,86 @@
+/****************************************************************\
+**       Métodos requeridos en los ejercicios del Tema 1        **
+** Autores: Pablo Baeyens Fernández y José Manuel Muñoz Fuentes **
+\****************************************************************/
+
+
+/* Método de bisección */
+
+biseccion(f,a,b,tol) := block(
+  [old:inf, new:-inf],
+  if f(a)*f(b) >= 0 then return("ERROR"),
+  while abs(old-new) > tol do (
+    old: new,
+    new: (a+b)/2,
+    if f(new) = 0 then return(new),
+    if f(a)*f(new) < 0 then
+      b:new
+    else
+      a: new
+  ),
+  float(new)
+)$
+
+
+/* Método de regula falsi */
+
+regula_falsi(f,a,b,tol) := block(
+  [old:inf, new:-inf],
+  if f(a)*f(b) >= 0 then return("ERROR"),
+  while abs(old-new) > tol do (
+  old: new,
+  new: b-(b-a)/(f(b)-f(a))*f(b),
+  if f(new) = 0 then return(new),
+  if f(a)*f(new) < 0 then
+     b:new
+  else
+     a: new
+  ),
+  float(new)
+)$
+
+
+/* Método de la secante */
+
+secante(f,a,b,tol) := block(
+  [older,old:a, new:b],
+  while abs(old-new) > tol do (
+    older:old,
+    old: new,
+    new: old-(old-older)/(f(old)-f(older))*f(old),
+    if new < a or new > b then return("error: fuera de rango"),
+    if f(new) = 0 then return(new)
+  ),
+  float(new)
+)$
+
+
+/* Método de Newton-Raphson */
+
+newton_raphson(f,a,b,tol) := block(
+  [old:a, new:(a+b)/2,df],
+  define(df(x),diff(f(x),x)),
+  while abs(old-new) > tol do (
+    old: new,
+    new: old-f(old)/df(old),
+    if new < a or new > b then return("error: fuera de rango"),
+    if f(new) = 0 then return(new)
+  ),
+  float(new)
+)$
+
+
+/* Método de Euler, pedido en el ejercicio 6 */
+
+eulerm(f,a,b,tol) := block(
+  [old:a, new:(a+b)/2,df],
+  define(df(x),diff(f(x),x)),
+  define(ddf(x),diff(df(x),x)),
+  while abs(old-new) > tol do (
+    old: new,
+    new: old-f(old)/df(old)*2/(1 + sqrt(1 - 2*f(old)*ddf(old)/(df(old)*df(old)))),
+    if new < a or new > b then return("error: fuera de rango"),
+    if f(new) = 0 then return(new)
+  ),
+  float(new)
+)$

@@ -1,0 +1,51 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 16.04.2 ] */
+
+/* [wxMaxima: input   start ] */
+load("Métodos.mac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+g(x):= %e^x-1;
+min:-2$  max:1$   tol:10^(-3)$
+metodo:biseccion$
+
+metodo(g,min,max,tol);
+plot2d(g(x),[x,min,max]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Ejercicio 1
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: comment start ]
+Tiene una única solución porque es monótona (f' > 0)
+en (0,+infinito) y f(1)*f(2) < 0
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g(x):= x^3 + 4*x^2 - 10;
+biseccion(g,1,2,10^(-5));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Para conseguir un error menor que 10^(-8) tenemos
+que hallar el menor n tal que (b-a)/2^(n+1) < 10^(-8)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ceiling(log((2-1)/10^(-8))/log(2) -1);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Ejercicio 6
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: input   start ] */
+f(x) := x^3 - 3*x^2*2^(-x) + 3*x*4^(-x) - 8^(-x);
+newton_raphson(f,0,1,10^(-1));
+eulerm(f,0,1,10^(-1));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
