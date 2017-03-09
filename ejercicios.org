@@ -47,28 +47,43 @@ Hecho en Maxima. No converge.
 
 *** e)
 
-Sea $x^\ast$ el punto fijo de $f$. Existe $\xi$ tal que:
+Sea $x^\ast$ el punto fijo de $f$. Por el teorema de Taylor existe $\xi$ en el menor intervalo abierto que contiene a $x_k$ y $x^\ast$ tal que:
 
-$$f(x) = f(x_k) + f'(x_k)(x-x_k) + \frac12f''(x_k)(x-x_k)^2 + \frac16f'''(\xi)(\xi - x_k)^3$$
+$$0 = f(x^\ast) = f(x_k) + f'(x_k)(x^\ast - x_k) + \frac12f''(x_k)(x^\ast - x_k)^2 + \frac16f'''(\xi)(x^\ast - x_k)^3$$
 
-Además:
+Además, por cómo se ha elegido $x_{k+1}$:
 
 $$0 = f(x_k)+ f'(x_k)(x_{k+1}-x_k) + \frac12f''(x_k)(x_{k+1}-x_k)^2$$
 
 Restando una expresión a otra:
 
-$$0 = f'(x_k)(x-x_{k+1}) + \frac12f''(x_k)(x - x_{k+1})(x+ x_{k+1} - 2x_k) + \frac16f'''(\xi)(\xi - x_k)^3$$
+$$0 = f'(x_k)(x^\ast - x_{k+1}) + \frac12f''(x_k)(x^\ast - x_{k+1})(x^\ast + x_{k+1} - 2x_k) + \frac16f'''(\xi)(x^\ast - x_k)^3$$
 
 Sacamos factor común y despejamos:
 
 
-$$\left(f'(x_k) + \frac12f''(x_k)(x+ x_{k+1} - 2x_k)\right)(x-x_{k+1}) =  -\frac16f'''(\xi)(\xi - x_k)^3$$
+$$\left(f'(x_k) + \frac12f''(x_k)(x^\ast + x_{k+1} - 2x_k)\right)(x^\ast - x_{k+1}) = \frac16f'''(\xi)(x_k - x^\ast)^3$$
 
-Tomamos valor absoluto y acotamos:
+Tomamos valor absoluto y tenemos que:
 
-$$|x-x_{k+1}| \leq \frac16\frac{|f'''(\xi)|}{\left|f'(x_k) + \frac12f''(x_k)(x+ x_{k+1} - 2x_k)\right|}|x - x_k|^3$$
+$$|x^\ast - x_{k+1}| = \frac16\frac{|f'''(\xi)|}{\left|f'(x_k) + \frac12f''(x_k)(x^\ast + x_{k+1} - 2x_k)\right|}|x^\ast - x_k|^3$$
 
-(Y a partir de aquí ni idea de cómo se seguía)
+Sea $f \in C^3([x^\ast - \delta_1, x^\ast + \delta_1])$ para algún $\delta_1 > 0$. Como $f'(x^\ast) \neq 0$, por el lema de conservación del signo $\exists \delta_2$ con $0 < \delta_2 \leq \delta_1$ tal que, siendo $I_2 = [x^\ast - \delta_2, x^\ast + \delta_2]$:
+
+$$\min_{x \in I_2} |f'(x)| > 0$$
+
+Sea $\displaystyle M_{i, \delta} = \max_{x \in [x^\ast - \delta, x^\ast + \delta]} |f^{(i)}(x)|$, que existe para todo $i$ menor que $4$ y todo $\delta$ menor o igual que $\delta_2$ por el teorema de Weierstrass y porque $f \in C^3(I_2)$. Sea $m_{i, \delta}$ la expresión con el mínimo, que en el caso anterior existe, por lo que podemos llamar $m_{1, \delta_2}$ a la cota inferior anterior.
+
+Tomamos $\delta$ con $0 < \delta \leq \delta_2$ tal que $\delta M_{2, \delta_2} < \frac 2 3 m_{1, \delta_2}$ y $M_{2, \delta_2} \left( 2 \frac {M_{0, \delta}}{m_{1, \delta_2}} \right) < m_{1, \delta_2}$. La segunda igualdad puede conseguirse porque $f(x)$ tiende a $0$ cuando $x$ tiende a $x^\ast$. Entonces, tomando $x_k \in I := [x^\ast - \delta, x^\ast + \delta]$ y usando la definición de $x_{k+1}$:
+
+$$ \frac{|f'''(\xi)|}{\left|f'(x_k) + \frac12f''(x_k)(x^\ast + x_{k+1} - 2x_k)\right|} \leq \frac{M_{3, \delta}}{m_{1, \delta} - \frac12 M_{2, \delta} |\underbrace{x^\ast - x_k}_{\leq \delta} + x_{k+1} - x_k|} $$
+$$ \leq \frac{M_{3, \delta}}{m_{1, \delta_2} - \frac12 M_{2, \delta_2} \big(\delta + |\frac 2 {\underbrace{1 + \sqrt{...}}_{\leq 1}} \frac {M_{0, \delta}}{m_{1, \delta_2}}| \big)} \leq \frac{M_{3, \delta}}{m_{1, \delta_2} - \frac13 m_{1, \delta_2} - \frac12 m_{1, \delta_2}} = \frac{6 M_{3, \delta}}{m_{1, \delta_2}}$$
+
+Por ello, sea $K = \frac{M_{3, \delta}}{m_{1, \delta_2}}$, podemos acotar la expresión que queríamos:
+
+$$|x^\ast - x_{k+1}| \leq K|x^\ast - x_k|^3$$
+
+Dando así orden de convergencia 3.
 
 
 
