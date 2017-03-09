@@ -73,12 +73,12 @@ newton_raphson(f,a,b,tol) := block(
 /* Método de Euler, pedido en el ejercicio 6 */
 
 eulerm(f,a,b,tol) := block(
-  [old:a, new:(a+b)/2,df],
+  [old:a, new:(a+b)/2,df,ddf],
   define(df(x),diff(f(x),x)),
   define(ddf(x),diff(df(x),x)),
   while abs(old-new) > tol do (
     old: new,
-    new: old-f(old)/df(old)*2/(1 + sqrt(1 - 2*f(old)*ddf(old)/(df(old)*df(old)))),
+    new: old-f(old)/df(old)*2/(1 + sqrt(1 - 2*f(old)*ddf(old)/(df(old)^2))),
     if new < a or new > b then return("error: fuera de rango"),
     if f(new) = 0 then return(new)
   ),
@@ -86,8 +86,26 @@ eulerm(f,a,b,tol) := block(
 )$
 
 
+/* Obtiene la lista de coeficientes de un polinomio */
+
+coeficientes(p) := block(
+  [p_expandido:expand(p(x))],
+  makelist(coeff(p_expandido, x, i), i, hipow(p(x),x), 0, -1)
+)$
+
 /* Algoritmo de Horner, pedido en el ejercicio 13 */
+/* Devuelve una lista con p(x0) y q(x) tales que: */
+/*   p(x) = (x-x0)·q(x) + p(x0)                   */
 
 horner(p, x0) := block(
-  /* TODO */
+  [a,b,r,grado],
+  if listp(p) then a:p else a:coeficientes(p),
+  kill(b),
+  grado:length(a)-1,
+  if grado = 0 then return([a[1], [0]]),
+  b[0]:a[1],
+  b[n]:=a[n+1]+x0*b[n-1],
+  r:a[grado+1]+x0*b[grado-1],
+  b:listarray(b),
+  [r, b]
 )$

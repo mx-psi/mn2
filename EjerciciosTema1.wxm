@@ -137,5 +137,29 @@ itera(g3,its,tol,x_0);
 Ejercicio 13
    [wxMaxima: section end   ] */
 
+/* [wxMaxima: comment start ]
+p(x) = q(x)(x-x0) + p(x0) => p'(x) = q'(x)(x-x0) + q(x) => p'(x0) = q(x0)
+q(x) = r(x)(x-x0) + q(x0) => q'(x) = r'(x)(x-x0) + r(x) => q'(x0) = r(x0)
+                          => p''(x)=q''(x)(x-x0)+2q'(x) => p''(x0)= 2q'(x0) = 2r(x0)
+
+r(x) = s(x)(x-x0) + r(x0) => r'(x0) = s(x0) y p3'(x) = q3'(x-x0)+3q'(x)
+                                                     = ...
+Es decir, el k! de Taylor sale solo
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+_taylor(p, x, c, n):=block(
+  [l_coef, ci, d:coeficientes(p(x))],
+  for k:0 thru n do [l_coef[k],d]:horner(d, c),
+  sum(l_coef[k]*(x-c)^k, k, 0, n)
+)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+p(x):=x^5+3*x^3-x^2-x+4;
+_taylor(p, x, 2, 4);
+taylor(p(x),x,2, 4);
+/* [wxMaxima: input   end   ] */
+
 /* Maxima can't load/batch files which end with a comment! */
 "Created with wxMaxima"$
