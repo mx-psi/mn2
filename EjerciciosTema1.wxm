@@ -113,7 +113,7 @@ block([old:-inf,new:x0,n:0],
     (  old:new,
        new:float(f(new)),
        n:n+1,
-       if abs(new-old) < tol then return(float(new))),
+       if max(abs(new-old)) < tol then return(float(new))),
     float(new))$
 /* [wxMaxima: input   end   ] */
 
@@ -171,13 +171,56 @@ g(x,y) = (y/raiz(5),1/4(sin(x) + cos(y)))
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-g18(v) := [float(v[2]/sqrt(5)),float((sin(v[1]) + cos(v[2]))/4)]$
+g18(v) := [v[2]/sqrt(5),(sin(v[1]) + cos(v[2]))/4];
 itera(g18,1000,10^(-5),[1/4,1/4]);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: section start ]
 Ejercicio 20
    [wxMaxima: section end   ] */
+
+/* [wxMaxima: comment start ]
+La función que debemos definir es:
+TODO: Comprobar que la segunda componente está bien (hay que despejar un cuadrado y
+    no sé si estoy cogiendo el signo correcto)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load(linearalgebra);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+g20b : [1/6 + 1/3*cos(x2*x3), 
+           1/sqrt(81)*sqrt(x1^2 + sin(x3) + 1.06), 
+           1/20*((3 - 10*pi)/3 - %e^(-x1*x2))]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Definimos ahora el método de Newton modificado:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+newton_raphsonm(f,as,bs,tol,vars,iters) := block(
+  [old:as, new:(as+bs)/2,Jf, eqs:[], n:0],
+    for i:1 thru length(vars) do (eqs: cons(vars[i] = as[i], eqs)),
+    Jf: invert(subst(eqs,jacobian(f,vars))), /* Jacobiana */
+  while lmax(abs(old-new)) > tol and n < iters do (
+    old: new,
+    new: old-Jf.f(old),
+    if f(new) = 0 then return(new)
+  ),
+  float(new)
+)$
+lmax(abs([1,1,1]));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Por último aplicamos el método
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+newton_raphsonm(g20b,[-1,-1,-1],[1,1,1],10^(-5),[x1,x2,x3],100);
+/* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */
 "Created with wxMaxima"$
