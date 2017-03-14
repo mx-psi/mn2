@@ -2,7 +2,6 @@
 #+STARTUP: latexpreview
 
 * Tema 1
-
 ** Ejercicio 6
 *** a) Hallar las raíces
 Para hallar el término $x_{n+1}$ hay que sacar las raíces del polinomio:
@@ -86,8 +85,7 @@ $$|x^\ast - x_{k+1}| \leq K|x^\ast - x_k|^3$$
 Dando así orden de convergencia 3.
 
 
-
-** 9
+** Ejercicio 9
 *** $x_{n+1} = 1 - \log x_n$
 Esta sucesión converge a un punto fijo de $1 - \log x_n$, es decir, un punto en el que:
 
@@ -117,3 +115,17 @@ Consideramos la aplicación $g(x) = x + (1 - \log x)/3$:
 Vemos que $|g'| < 1$ en $(0,+\infty)$ por lo que la aplicación es contractiva.
 
 Además $g([2,3]) \subseteq [2,3]$
+** Ejercicio 18
+*** a) Hallar $D$ y $g$ para el método
+Sea $D = [0,1]^2$. Podemos tomar como $g = g_1 \times g_2$:
+
+$$g_1(x,y) = \frac{1}{\sqrt{5}}y = x \iff 5x^2 - y^2 = 0$$
+$$g_2(x,y) = \frac14(\sin x + \cos y) = y \iff y - 0.25(\sin x +\cos y) = 0$$
+
+Tenemos que $g_1,g_2 \geq 0$ en $D$. Además, claramente: $\max g_1 = \frac1{\sqrt{5}} < 1$ y $\max g_2 \leq \frac12$.
+Por otra parte:
+
+$$J g(x) = \left(\begin{matrix}0 & \frac{1}{\sqrt{5}} \\ \frac{\cos x}{4} & \frac{-\sin y}{4} \end{matrix}\right)$$
+
+Y por tanto $||J g(x)|| = \max_{x,y \in D} \{ \frac{1}{\sqrt{5}}, \frac14(|\cos x| + |\sin y|) \} = \frac12 < 1$, por lo que la aplicación es contractiva.
+
