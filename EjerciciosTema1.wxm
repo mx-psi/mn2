@@ -185,10 +185,11 @@ Aplicamos la versión modificada del método de Newton
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-sol_mod:newton_raphson_sist_m(f20,[-1,-1,-1],[1,1,1],10^(-5),[x1,x2,x3],100)$
-print("El método modificado ha requerido", iter, "iteraciones y", time(%)[1], "segundos")$
-newton_raphson_sist(f20,[-1,-1,-1],[1,1,1],10^(-5),[x1,x2,x3],100)$
-print("El método sin modificar ha requerido", iter, "iteraciones y", time(%)[1], "segundos")$
+tol:10^(-5)$
+for i:1 thru 100 do sol_mod:newton_raphson_sist_m(f20,[-1,-1,-1],[1,1,1],tol,[x1,x2,x3],100)$
+print("El método modificado ha requerido", iter, "iteraciones y", time(%)[1]*10, "milisegundos")$
+for i:1 thru 100 do newton_raphson_sist(f20,[-1,-1,-1],[1,1,1],tol,[x1,x2,x3],100)$
+print("El método sin modificar ha requerido", iter, "iteraciones y", time(%)[1]*10, "milisegundos")$
 print("Solución obtenida:", sol_mod)$
 print("f(sol_mod) =", float(apply(f20, sol_mod)))$
 /* [wxMaxima: input   end   ] */
