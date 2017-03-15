@@ -3,13 +3,16 @@
 ** Autores: Pablo Baeyens Fernández y José Manuel Muñoz Fuentes **
 \****************************************************************/
 
+load(linearalgebra)$  /* jacobian */
 
 /* Método de bisección */
 
 biseccion(f,a,b,tol) := block(
   [old:inf, new:-inf],
+  iter: 0,
   if f(a)*f(b) >= 0 then return("ERROR"),
   while abs(old-new) > tol do (
+    iter: iter+1,
     old: new,
     new: (a+b)/2,
     if f(new) = 0 then return(new),
@@ -26,15 +29,17 @@ biseccion(f,a,b,tol) := block(
 
 regula_falsi(f,a,b,tol) := block(
   [old:inf, new:-inf],
+  iter: 0,
   if f(a)*f(b) >= 0 then return("ERROR"),
   while abs(old-new) > tol do (
-  old: new,
-  new: b-(b-a)/(f(b)-f(a))*f(b),
-  if f(new) = 0 then return(new),
-  if f(a)*f(new) < 0 then
-     b:new
-  else
-     a: new
+    iter: iter+1,
+    old: new,
+    new: b-(b-a)/(f(b)-f(a))*f(b),
+    if f(new) = 0 then return(new),
+    if f(a)*f(new) < 0 then
+       b:new
+    else
+       a: new
   ),
   float(new)
 )$
@@ -44,7 +49,9 @@ regula_falsi(f,a,b,tol) := block(
 
 secante(f,a,b,tol) := block(
   [older,old:a, new:b],
+  iter: 0,
   while abs(old-new) > tol do (
+    iter: iter+1,
     older:old,
     old: new,
     new: old-(old-older)/(f(old)-f(older))*f(old),
@@ -59,8 +66,10 @@ secante(f,a,b,tol) := block(
 
 newton_raphson(f,a,b,tol) := block(
   [old:a, new:(a+b)/2,df],
+  iter: 0,
   define(df(x),diff(f(x),x)),
   while abs(old-new) > tol do (
+    iter: iter+1,
     old: new,
     new: old-f(old)/df(old),
     if new < a or new > b then return("error: fuera de rango"),
@@ -74,9 +83,11 @@ newton_raphson(f,a,b,tol) := block(
 
 eulerm(f,a,b,tol) := block(
   [old:a, new:(a+b)/2,df,ddf],
+  iter: 0,
   define(df(x),diff(f(x),x)),
   define(ddf(x),diff(df(x),x)),
   while abs(old-new) > tol do (
+    iter: iter+1,
     old: new,
     new: old-f(old)/df(old)*2/(1 + sqrt(1 - 2*f(old)*ddf(old)/(df(old)^2))),
     if new < a or new > b then return("error: fuera de rango"),
@@ -88,13 +99,14 @@ eulerm(f,a,b,tol) := block(
 
 /* Obtiene el límite iterado de f */
 
-itera(f,iters,tol,x0):=
-block([old:-inf,new:x0,n:0],
-  while n < iters do (
+itera(f,iters,tol,x0) := block(
+  [old:-inf,new:x0],
+  iter: 0,
+  while iter < iters do (
+    iter: iter+1,
     old:new,
     new:float(f(new)),
-    n:n+1,
-    if max(abs(new-old)) < tol then return(float(new))
+    if lmax(abs(new-old)) < tol then return(float(new))
   ),
   float(new)
 )$
@@ -121,4 +133,36 @@ horner(p, x0) := block(
   r:a[grado+1]+x0*b[grado-1],
   b:listarray(b),
   [r, b]
+)$
+
+/* Método de Newton para sistemas de ecuaciones lineales */
+
+newton_raphson_sist(f,as,bs,tol,vars,iters) := block(
+  [old:as, new:(as+bs)/2,Jf,Jfit,ratprint:false],
+  iter: 0,
+  define(funmake(Jf, vars), jacobian(apply(f, vars), vars)), /* Jacobiana */
+  while lmax(abs(old-new)) > tol and iter < iters do (
+    iter: iter+1,
+    Jfit:transpose(invert(apply(Jf, new))),  /* Jacobiana inversa transpuesta en 0 */
+    old: new,
+    new: float(old-(apply(f, old).Jfit)[1]),
+    if lmax(abs(apply(f, new))) = 0 then return(new)
+  ),
+  float(new)
+)$
+
+/* Versión que usa la matriz jacobiana inicial en todas las iteraciones */
+
+newton_raphson_sist_m(f,as,bs,tol,vars,iters) := block(
+  [old:as, new:(as+bs)/2,Jf,Jfit0,ratprint:false],
+  iter: 0,
+  define(funmake(Jf, vars), jacobian(apply(f, vars), vars)), /* Jacobiana */
+  Jfit0:transpose(invert(apply(Jf, new))),  /* Jacobiana inversa transpuesta en 0 */
+  while lmax(abs(old-new)) > tol and iter < iters do (
+    iter: iter+1,
+    old: new,
+    new: float(old-(apply(f, old).Jfit0)[1]),
+    if lmax(abs(apply(f, new))) = 0 then return(new)
+  ),
+  float(new)
 )$
