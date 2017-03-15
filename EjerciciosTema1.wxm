@@ -1,5 +1,5 @@
 /* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
-/* [ Created with wxMaxima version 15.08.2 ] */
+/* [ Created with wxMaxima version 16.04.2 ] */
 
 /* [wxMaxima: input   start ] */
 load("Métodos.mac")$
@@ -105,17 +105,6 @@ eulerm(f,0,1,10^(-1));
 /* [wxMaxima: section start ]
 Ejercicio 9
    [wxMaxima: section end   ] */
-
-/* [wxMaxima: input   start ] */
-itera(f,iters,tol,x0):=
-block([old:-inf,new:x0,n:0],
-    while n < iters do
-    (  old:new,
-       new:float(f(new)),
-       n:n+1,
-       if max(abs(new-old)) < tol then return(float(new))),
-    float(new))$
-/* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
 g1(x) := 1 - log(x)$

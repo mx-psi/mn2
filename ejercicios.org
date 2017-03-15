@@ -122,10 +122,12 @@ Sea $D = [0,1]^2$. Podemos tomar como $g = g_1 \times g_2$:
 $$g_1(x,y) = \frac{1}{\sqrt{5}}y = x \iff 5x^2 - y^2 = 0$$
 $$g_2(x,y) = \frac14(\sin x + \cos y) = y \iff y - 0.25(\sin x +\cos y) = 0$$
 
-Tenemos que $g_1,g_2 \geq 0$ en $D$. Además, claramente: $\max g_1 = \frac1{\sqrt{5}} < 1$ y $\max g_2 \leq \frac12$.
-Por otra parte:
+Tenemos que $g_1,g_2 \geq 0$ en $D$. Además, claramente: $\max g_1 = \frac1{\sqrt{5}} < 1$ y $\max g_2 \leq \frac12$. Así, $g(D) \subseteq D$.
+Por otra parte, $g \in C^1(D)$ y:
 
 $$J g(x) = \left(\begin{matrix}0 & \frac{1}{\sqrt{5}} \\ \frac{\cos x}{4} & \frac{-\sin y}{4} \end{matrix}\right)$$
 
-Y por tanto $||J g(x)|| = \max_{x,y \in D} \{ \frac{1}{\sqrt{5}}, \frac14(|\cos x| + |\sin y|) \} = \frac12 < 1$, por lo que la aplicación es contractiva.
+Y por tanto $||J g(x)||_\infty = \max_{x,y \in D} \{ \frac{1}{\sqrt{5}}, \frac14(|\cos x| + |\sin y|) \} = \frac12 < 1$, por lo que la aplicación es contractiva en $D$.
+
+Así, por el teorema de convergencia global, existe $x^\ast \in D$ tal que $g(x^\ast) = x^\ast$. Además el teorema garantiza la convergencia a ese punto mediante iteración funcional.
 

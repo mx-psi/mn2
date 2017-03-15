@@ -86,6 +86,19 @@ eulerm(f,a,b,tol) := block(
 )$
 
 
+/* Obtiene el límite iterado de f */
+
+itera(f,iters,tol,x0):=
+block([old:-inf,new:x0,n:0],
+  while n < iters do (
+    old:new,
+    new:float(f(new)),
+    n:n+1,
+    if max(abs(new-old)) < tol then return(float(new))
+  ),
+  float(new)
+)$
+
 /* Obtiene la lista de coeficientes de un polinomio */
 
 coeficientes(p) := block(
