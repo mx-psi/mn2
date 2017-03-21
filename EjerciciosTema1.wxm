@@ -99,8 +99,8 @@ Ejercicio 6
 
 /* [wxMaxima: input   start ] */
 f(x) := x^3 - 3*x^2*2^(-x) + 3*x*4^(-x) - 8^(-x);
-newton_raphson(f,0,1,10^(-1));
-eulerm(f,0,1,10^(-1));
+newton_raphson(f,0.4,1,10^(-1));
+eulerm(f,0.4,1,10^(-1));
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: section start ]
@@ -152,6 +152,28 @@ taylor(p(x),x,2, 4);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: section start ]
+Ejercicio 17
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: input   start ] */
+f17(x1,x2,x3) := [3*x1-cos(x2*x3),
+        x1^2-81*(x2+0.1)^2+sin(x3)+1.06,
+        %e^(-x1*x2)+20*x3+(10*%pi-3)/3
+]$
+g17(x):=[cos(x[2]*x[3])/3,
+         -(sqrt(2)*sqrt(50*sin(x[3])+50*x[1]^2+53)+9)/90,
+         -(%e^(-x[1]*x[2])*((10*%pi-3)*%e^(x[1]*x[2])+3))/60]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+[lim, tol]:[100, 10^(-5)]$
+itera(g17, lim, tol, [0.1, 0.1, -0.1]);
+print("El método sin modificar ha requerido", iter, "iteraciones y ", time(%)[1]*10, "milisegundos. f(resultado) = ", float(apply(f17, %))),fpprintprec:4$
+itera_gs(g17, lim, tol, [0.1, 0.1, -0.1]);
+print("El método modificado ha requerido", iter, "iteraciones y", time(%)[1]*10, "milisegundos. f(resultado) = ", float(apply(f17, %))),fpprintprec:4$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
 Ejercicio 18
    [wxMaxima: section end   ] */
 
@@ -190,6 +212,8 @@ for i:1 thru 100 do sol_mod:newton_raphson_sist_m(f20,[-1,-1,-1],[1,1,1],tol,[x1
 print("El método modificado ha requerido", iter, "iteraciones y", time(%)[1]*10, "milisegundos")$
 for i:1 thru 100 do newton_raphson_sist(f20,[-1,-1,-1],[1,1,1],tol,[x1,x2,x3],100)$
 print("El método sin modificar ha requerido", iter, "iteraciones y", time(%)[1]*10, "milisegundos")$
+for i:1 thru 100 do newton_raphson_sist2(f20,[-1,-1,-1],[1,1,1],tol,[x1,x2,x3],100)$
+print("El método sin modificar v2 ha requerido", iter, "iteraciones y", time(%)[1]*10, "milisegundos")$
 print("Solución obtenida:", sol_mod)$
 print("f(sol_mod) =", float(apply(f20, sol_mod)))$
 /* [wxMaxima: input   end   ] */
