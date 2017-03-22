@@ -1,9 +1,21 @@
 /* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
 /* [ Created with wxMaxima version 16.04.2 ] */
 
+/* [wxMaxima: comment start ]
+   Ejercicios del Tema 1 de Métodos Numéricos II
+Pablo Baeyens Fernández y José Manuel Muñoz Fuentes
+
+Esta línea debe ejecutarse antes que las siguientes:
+   [wxMaxima: comment end   ] */
+
 /* [wxMaxima: input   start ] */
-load("Métodos.mac")$
+load("MétodosT1.mac")$
 /* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Un ejemplo de lo que se puede hacer, entre otras cosas
+Puede cambiarse biseccion por el nombre de otro método
+   [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
 g(x):= %e^x-1;
