@@ -1,0 +1,35 @@
+/****************************************************************\
+**       Métodos requeridos en los ejercicios del Tema 2        **
+** Autores: Pablo Baeyens Fernández y José Manuel Muñoz Fuentes **
+\****************************************************************/
+
+/* Diferencias divididas */
+
+dd(f, v):=block([n:length(v),df],
+    if v[1] = v[n] then
+        (define(df(x), diff(f(x),x,n-1)), df(v[1])/(n-1)!)
+    else (dd(f, makelist(v[i],i,1,n-1))-dd(f, makelist(v[i],i,2,n)))/(v[1]-v[n])
+)$
+
+
+/* Elemento i-ésimo de la base de Lagrange */
+
+bli(v, i) := product(if i = j then 1 else (x-v[j])/(v[i]-v[j]), j, 1, length(v))$
+
+/* Base de Lagrange */
+
+bl(v) := makelist(bli(v, i), i, 1, length(v))$
+
+
+/* Polinomio de interpolación mediante base de Lagrange */
+
+pl(f, v) := sum(f(v[i])*bli(v, i), i, 1, length(v))$
+
+
+/* Polinomio de interpolación mediante base de Newton */
+
+pn(f, v) := sum(
+    dd(f, 
+    makelist(v[j],j,1,i))*
+    product(x-v[j], j, 1, i-1)
+  , i, 1, length(v))$

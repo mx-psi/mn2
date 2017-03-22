@@ -1,0 +1,21 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 16.04.2 ] */
+
+/* [wxMaxima: comment start ]
+   Ejercicios del Tema 2 de Métodos Numéricos II
+Pablo Baeyens Fernández y José Manuel Muñoz Fuentes
+
+Esta línea debe ejecutarse antes que las siguientes:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("MétodosT2.mac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+f(x):=sin(x^2/2)$
+plot2d([pl(f, [0,1,4]), pn(f, [0,1,4]), f(x)], [x, 0, 4])$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
