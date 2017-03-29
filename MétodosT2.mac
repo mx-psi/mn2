@@ -38,3 +38,7 @@ pn(f, v) := sum(
 /* FDN de tipo interpolatorio */
 
 fdn(f, v, c) := block(define(dp(x), diff(pl(f, v), x)), dp(c))$
+
+/* FCN de tipo interpolatorio */
+
+fcn(f, v, a, b) := integrate(pl(f, v), x, a, b)$
