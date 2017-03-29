@@ -32,4 +32,9 @@ pn(f, v) := sum(
     dd(f, 
     makelist(v[j],j,1,i))*
     product(x-v[j], j, 1, i-1)
-  , i, 1, length(v))$
+  , i, 1, length(v)
+)$
+
+/* FDN de tipo interpolatorio */
+
+fdn(f, v, c) := block(define(dp(x), diff(pl(f, v), x)), dp(c))$
