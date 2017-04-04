@@ -84,7 +84,6 @@ $$|x^\ast - x_{k+1}| \leq K|x^\ast - x_k|^3$$
 
 Dando así orden de convergencia 3.
 
-
 ** Ejercicio 9
 *** $x_{n+1} = 1 - \log x_n$
 Esta sucesión converge a un punto fijo de $1 - \log x_n$, es decir, un punto en el que:
@@ -130,4 +129,44 @@ $$J g(x) = \left(\begin{matrix}0 & \frac{1}{\sqrt{5}} \\ \frac{\cos x}{4} & \fra
 Y por tanto $||J g(x)||_\infty = \max_{x,y \in D} \{ \frac{1}{\sqrt{5}}, \frac14(|\cos x| + |\sin y|) \} = \frac12 < 1$, por lo que la aplicación es contractiva en $D$.
 
 Así, por el teorema de convergencia global, existe $x^\ast \in D$ tal que $g(x^\ast) = x^\ast$. Además el teorema garantiza la convergencia a ese punto mediante iteración funcional.
+
+* Tema 2
+** Ejercicio 9
+*** a)
+Si llamamos los nodos $x_i, x_j, x_k$ tenemos que:
+
+$$l_i'(x) = \frac{2x - x_j - x_k}{(x_i -x_k)(x_i - x_j)}$$
+
+Es decir:
+
+- $l_0'(x) = \frac{2x - 4h}{3h^2}$, por lo que $l_0'(2h) = 0$
+- $l_1'(x) = \frac{2x - 3h}{-2h^2}$, por lo que $l_1'(2h) = \frac{-1}{2h}$
+- $l_2'(x) = \frac{2x - h}{6h^2}$, por lo que $l_2'(2h) = \frac{1}{2h}$
+
+Por tanto la fórmula de derivación numérica queda:
+
+$$\operatorname{FDN}(f) = \sum f(x_i)l_i(x) = \frac{f(3h) - f(h)}{2h}$$
+
+*** b)
+
+Desarrollamos el polinomio de Taylor centrado en $2h$:
+
+$$f(x) = f(2h) + f'(2h)(x-2h) + \frac12 f''(2h)(x-2h)^2 + \frac16 f'''(\xi)(x-2h)^3$$
+
+Evaluando en $3h$ y en $h$ tenemos, para $h < \xi_2 < 2h < \xi_1 < 3h$:
+
+$$f(3h) = f(2h) + hf'(2h) + \frac12 h^2 f''(2h) + \frac16 h^3 f'''(\xi_1)$$
+$$f(h) = f(2h) - hf'(2h) + \frac12 h^2 f''(2h) - \frac16 h^3  f'''(\xi_2)$$
+
+La diferencia vale:
+
+$$f(3h) - f(h) = 2hf'(2h) + \frac16 h^3 (f'''(\xi_1) + f'''(\xi_2))$$
+
+Si $f \in \mathcal{C}^3$ por el teorema de los valores intermedios tenemos que existe un $h < \xi < 3h$ tal que:
+
+$$f(3h) - f(h) = 2hf'(2h) + \frac13 h^3 f'''(\xi)$$
+
+Por tanto:
+
+$$\operatorname{ED}(f) = f'(2h) - \operatorname{FDN}(f) = f'(2h) - \frac{f(3h)-f(h)}{2h} = - \frac{h^2}{6} f'''(\xi)$$
 
