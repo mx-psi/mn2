@@ -69,5 +69,24 @@ kill(f)$
 factor(fdn(f, [0, h, 3*h], 2*h));
 /* [wxMaxima: input   end   ] */
 
+/* [wxMaxima: section start ]
+Ejercicio 15
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: input   start ] */
+kill(f,a,b,M)$
+f[1](x):=x^2*log(x)$      [a[1],b[1]]:[1,15/10]$
+f[2](x):=x^3*%e^-x$       [a[2],b[2]]:[0,1]$
+f[3](x):=3*x/(x^2-4)$     [a[3],b[3]]:[1,18/10]$
+f[4](x):=cos(x)*%e^(3*x)$ [a[4],b[4]]:[0,%pi/4]$
+
+apply(matrix, append([["Punto medio", "Trapecio", "Simpson", "Valor real"]],
+    makelist(float([fcn(f[i], [(a[i]+b[i])/2], a[i], b[i]),
+                    fcn(f[i], [a[i],b[i]], a[i], b[i]),
+                    fcn(f[i], [a[i],(a[i]+b[i])/2,b[i]], a[i], b[i]),
+                    integrate(f[i](x),x,a[i],b[i])
+                   ]), i, 1, 4)));
+/* [wxMaxima: input   end   ] */
+
 /* Maxima can't load/batch files which end with a comment! */
 "Created with wxMaxima"$
