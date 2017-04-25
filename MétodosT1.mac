@@ -5,13 +5,17 @@
 
 load(linearalgebra)$  /* jacobian */
 
+/* Valor absoluto o norma del máximo, según el contexto */
+
+norma(x) := if listp(x) then lmax(abs(x)) else abs(x)$
+
 /* Método de bisección */
 
 biseccion(f,a,b,tol) := block(
   [old:inf, new:-inf],
   iter: 0,
   if f(a)*f(b) >= 0 then return("ERROR"),
-  while abs(old-new) > tol and iter < 10^5 do (
+  while norma(old-new) > tol and iter < 10^5 do (
     iter: iter+1,
     old: new,
     new: (a+b)/2,
@@ -31,7 +35,7 @@ regula_falsi(f,a,b,tol) := block(
   [old:inf, new:-inf],
   iter: 0,
   if f(a)*f(b) >= 0 then return("ERROR"),
-  while abs(old-new) > tol and iter < 10^5 do (
+  while norma(old-new) > tol and iter < 10^5 do (
     iter: iter+1,
     old: new,
     new: b-(b-a)/(f(b)-f(a))*f(b),
@@ -50,7 +54,7 @@ regula_falsi(f,a,b,tol) := block(
 secante(f,a,b,tol) := block(
   [older,old:a, new:b],
   iter: 0,
-  while abs(old-new) > tol and iter < 10^5 do (
+  while norma(old-new) > tol and iter < 10^5 do (
     iter: iter+1,
     older:old,
     old: new,
@@ -68,7 +72,7 @@ newton_raphson(f,a,b,tol) := block(
   [old:a, new:(a+b)/2,df],
   iter: 0,
   define(df(x),diff(f(x),x)),
-  while abs(old-new) > tol and iter < 10^5 do (
+  while norma(old-new) > tol and iter < 10^5 do (
     iter: iter+1,
     old: new,
     new: old-f(old)/df(old),
@@ -86,7 +90,7 @@ eulerm(f,a,b,tol) := block(
   iter: 0,
   define(df(x),diff(f(x),x)),
   define(ddf(x),diff(df(x),x)),
-  while abs(old-new) > tol and iter < 10^5 do (
+  while norma(old-new) > tol and iter < 10^5 do (
     iter: iter+1,
     old: new,
     new: old-f(old)/df(old)*2/(1 + sqrt(1 - 2*f(old)*ddf(old)/(df(old)^2))),
@@ -106,7 +110,23 @@ itera(g,iters,tol,x0) := block(
     iter: iter+1,
     old:new,
     new:float(g(new)),
-    if lmax(abs(new-old)) < tol then return(float(new))
+    if norma(new-old) < tol then return(float(new))
+  ),
+  float(new)
+)$
+
+/*  Obtiene el límite iterado de g con el método de Steffensen  */
+/* Método basado en la aceleración de la convergencia de Aitken */
+
+itera_st(g,iters,tol,x0) := block(
+  [old,new:x0,gnew],
+  iter: 0,
+  while iter < iters do (
+    iter: iter+1,
+    old:new,
+    gnew: g(new),
+    new:float(new-(gnew-new)^2/(g(gnew) - 2*gnew + new)),
+    if norma(new-old) < tol then return(float(new))
   ),
   float(new)
 )$
@@ -121,7 +141,7 @@ itera_gs(g,iters,tol,x0) := block(
     iter: iter+1,
     old:copylist(new),
     for i:1 thru length(new) do new[i]: float(g(new)[i]),
-    if lmax(abs(new-old)) < tol then return(float(new))
+    if norma(new-old) < tol then return(float(new))
   ),
   float(new)
 )$
@@ -156,12 +176,12 @@ newton_raphson_sist(f,as,bs,tol,vars,iters) := block(
   [old:as, new:(as+bs)/2,Jf,Jfit,ratprint:false],
   iter: 0,
   define(funmake(Jf, vars), jacobian(apply(f, vars), vars)), /* Jacobiana */
-  while lmax(abs(old-new)) > tol and iter < iters do (
+  while norma(old-new) > tol and iter < iters do (
     iter: iter+1,
     Jfit:transpose(invert(apply(Jf, new))),  /* Jacobiana inversa transpuesta en 0 */
     old: new,
     new: float(old-(apply(f, old).Jfit)[1]),
-    if lmax(abs(apply(f, new))) = 0 then return(new)
+    if norma(apply(f, new)) = 0 then return(new)
   ),
   float(new)
 )$
@@ -172,11 +192,11 @@ newton_raphson_sist2(f,as,bs,tol,vars,iters) := block(
   [old:as, new:(as+bs)/2,Jf,ratprint:false],
   iter: 0,
   define(funmake(Jf, vars), jacobian(apply(f, vars), vars)), /* Jacobiana */
-  while lmax(abs(old-new)) > tol and iter < iters do (
+  while norma(old-new) > tol and iter < iters do (
     iter: iter+1,
     old: new,
     new: old-float(map(rhs, linsolve(list_matrix_entries(apply(Jf, old).transpose(vars) - transpose(apply(f, old))), vars))),
-    if lmax(abs(apply(f, new))) = 0 then return(new)
+    if norma(apply(f, new)) = 0 then return(new)
   ),
   float(new)
 )$
@@ -188,11 +208,11 @@ newton_raphson_sist_m(f,as,bs,tol,vars,iters) := block(
   iter: 0,
   define(funmake(Jf, vars), jacobian(apply(f, vars), vars)), /* Jacobiana */
   Jfit0:transpose(invert(apply(Jf, new))),  /* Jacobiana inversa transpuesta en 0 */
-  while lmax(abs(old-new)) > tol and iter < iters do (
+  while norma(old-new) > tol and iter < iters do (
     iter: iter+1,
     old: new,
     new: float(old-(apply(f, old).Jfit0)[1]),
-    if lmax(abs(apply(f, new))) = 0 then return(new)
+    if norma(apply(f, new)) = 0 then return(new)
   ),
   float(new)
 )$
