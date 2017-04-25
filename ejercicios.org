@@ -1,7 +1,7 @@
 #+OPTIONS: tex:t
 #+STARTUP: latexpreview
 
-* Tema 1
+* Tema 1 :noexport:
 ** Ejercicio 6
 *** a) Hallar las raíces
 Para hallar el término $x_{n+1}$ hay que sacar las raíces del polinomio:
@@ -170,3 +170,45 @@ Por tanto:
 
 $$\operatorname{ED}(f) = f'(2h) - \operatorname{FDN}(f) = f'(2h) - \frac{f(3h)-f(h)}{2h} = - \frac{h^2}{6} f'''(\xi)$$
 
+** Ejercicio 13
+*** Deduce las expresiones de las fórmulas de Newton-Cotes abiertas con $n = 1$ y $n = 2$ y obtén la expresión del error de dichas fórmulas
+
+Las fórmulas se obtienen de:
+
+$$\operatorname{FC}_n(f) = \sum_{i=0}^{n}\left(\int_0^2 l_i\right)f\left(a + (i+1)\frac{b-a}{n+2}\right)$$
+
+Para calcular las integrales de los polinomios de la base de Lagrange utilizamos el cambio de variable que las transforma en integrales estándar.
+
+En el caso de *n = 1* tenemos:
+
+#+TODO
+
+El error tiene la expresión, para cierto $\xi \in [0,2]$:
+
+$$\operatorname{EC}_1(f) = \frac{h^{1+2}f^{1+1)}(\xi)}{(1+1)!}\int_{-1}^{1+1} y(y-1) \; dy = \frac{3h^3}{4}f^{2)}(\xi)$$
+
+En el caso de *n = 2* tenemos:
+  
+#+TODO
+
+El error tiene la expresión, para cierto $\xi \in [0,2]$:
+
+$$\operatorname{EC}_2(f) = \frac{h^{2+3}f^{2+2)}(\xi)}{(2+2)!}\int_{-1}^{2+1} y^2(y-1)(y-2) \; dy = \frac{14h^5}{45}f^{4)}(\xi)$$
+
+*** Calcula utilizando las fórmulas obtenidas en el apartado anterior las aproximaciones de $\int_0^2x^3 - 2x^2 +1 \; dx$
+
+Basta aplicar las fórmulas utilizadas anteriormente, con $h = 2/(n+2)$, $a = 0$, $b = 2$.
+
+$$\operatorname{FNC}_1(f) = \frac{3h}{2}[f(a+h) + f(b-h)] = \frac29 = 0.\bar{2} $$
+$$\operatorname{FNC}_2(f) = \frac{4h}{3}\left[2f(a+h) -f\left(\frac{a+b}{2}\right)+ 2f(b-h)\right] = \frac23$$
+
+*** Compara los errores reales con los errores teóricos cometidos
+Podemos calcular el valor exacto de la integral obteniendo una primitiva:
+
+$$\int_0^2x^3 - 2x^2 +1 \; dx = \left[\frac14 x^4 - \frac23 x^3 + x \right]_0^2 = 4-5\frac{1}{3} + 2 = \frac23$$
+
+Comparamos con las cotas del error que nos proporciona la expresión del error de las fórmulas:
+
+$$|E_1|(f) = \frac49 \quad |E_1(f)| = \frac{3h^3}{4}|f''(\xi)| = |\frac89(6\xi-4)| \leq \frac89(12-4) = \frac{16}{9} $$
+
+$$|E_2|(f) = 0 \quad |E_2(f)| = \frac{14h^5}{45}|f^4)(\xi)| = 0$$
