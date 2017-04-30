@@ -45,12 +45,12 @@ fcn(f, v, a, b) := integrate(pl(f, v), x, a, b)$
 
 /* Polinomio i-ésimo de Legendre */
 
-leg[0](x) := 1;
-leg[i](x) := x^i - sum(integrate(x^i*leg[j](x),x,-1,1)/integrate(leg[j](x)*leg[j](x),x,-1,1)*leg[j](x),j,0,i-1);
+leg[0](x) := 1$
+leg[i](x) := x^i - sum(integrate(x^i*leg[j](x),x,-1,1)/integrate(leg[j](x)*leg[j](x),x,-1,1)*leg[j](x),j,0,i-1)$
 
 
 /* Nodos del polinomio i-ésimo de Legendre */
 nodos_leg(n,a,b):= map(
-lambda([x], 1/2*((b[i]-a[i])*rhs(t) + a[i] + b[i])),
-solve(leg[n](x) = 0));
+lambda([x], ((b-a)*rhs(x) + a + b)/2),
+solve(leg[n](x) = 0))$
 

@@ -1,5 +1,5 @@
 /* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
-/* [ Created with wxMaxima version 15.08.2 ] */
+/* [ Created with wxMaxima version 16.04.2 ] */
 
 /* [wxMaxima: comment start ]
    Ejercicios del Tema 2 de Métodos Numéricos II
@@ -81,11 +81,11 @@ f[3](x):=3*x/(x^2-4)$     [a[3],b[3]]:[1,18/10]$
 f[4](x):=cos(x)*%e^(3*x)$ [a[4],b[4]]:[0,%pi/4]$
 
 apply(matrix, append([["Punto medio", "Trapecio", "Simpson", "Gauss (n=2)","Valor real"]],
-    makelist(float([fcn(f[i], [(a[i]+b[i])/2], a[i], b[i]),
-                    fcn(f[i], [a[i],b[i]], a[i], b[i]),
+    makelist(float([fcn(f[i], [(a[i]+b[i])/2],           a[i], b[i]),
+                    fcn(f[i], [a[i],b[i]],               a[i], b[i]),
                     fcn(f[i], [a[i],(a[i]+b[i])/2,b[i]], a[i], b[i]),
-                    fcn((b[i]-a[i])/2*f[i], nodos_leg(2,a[i],b[i]), a[i], b[i]),
-                    integrate(f[i](x),x,a[i],b[i])
+                    fcn(f[i], nodos_leg(2,a[i],b[i]),    a[i], b[i]),
+                    integrate(f[i](x),x,                 a[i], b[i])
                    ]), i, 1, 4)));
 /* [wxMaxima: input   end   ] */
 
