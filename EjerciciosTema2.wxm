@@ -1,5 +1,5 @@
 /* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
-/* [ Created with wxMaxima version 15.08.2 ] */
+/* [ Created with wxMaxima version 16.04.2 ] */
 
 /* [wxMaxima: comment start ]
    Ejercicios del Tema 2 de Métodos Numéricos II
@@ -70,7 +70,7 @@ factor(fdn(f, [0, h, 3*h], 2*h));
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: section start ]
-Ejercicio 15 y 21
+Ejercicios 15 y 21
    [wxMaxima: section end   ] */
 
 /* [wxMaxima: input   start ] */
@@ -90,9 +90,27 @@ apply(matrix, append([["Punto medio", "Trapecio", "Simpson", "Gauss (n=2)","Valo
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
-print("Errores:");
+print("Errores:")$
 apply(matrix, append([["Punto medio", "Trapecio", "Simpson", "Gauss (n=2)"]],
     makelist(float(makelist(aprox[j,i]-real[i],j,1,4)), i, 1, 4)));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Ejercicio 22
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: input   start ] */
+kill(f, a, b)$
+f(x):=1/(1+x^2)$
+[a, b]: [-4, 4]$
+N:[2, 4, 6, 8]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+gaussianas:float(makelist(fcn(f, nodos_leg(k, a, b), a, b), k, N));
+cerradas:  float(makelist(fcn(f, makelist(a+i*(b-a)/k, i, 0, k), a, b), k, N));
+abiertas:  float(makelist(fcn(f, makelist(a+(i+1)*(b-a)/(k+2), i, 0, k), a, b), k, N));
+real:      float(integrate(f(x), x, a, b));
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */
