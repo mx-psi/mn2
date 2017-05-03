@@ -52,5 +52,5 @@ leg[i](x) := x^i - sum(integrate(x^i*leg[j](x),x,-1,1)/integrate(leg[j](x)*leg[j
 /* Nodos del polinomio i-ésimo de Legendre */
 nodos_leg(n,a,b):= map(
 lambda([x], ((b-a)*rhs(x) + a + b)/2),
-solve(leg[n](x) = 0))$
+realroots(leg[n](x)))$
 
