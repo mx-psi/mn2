@@ -1,0 +1,149 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 15.10.0-unofficial ] */
+
+/* [wxMaxima: input   start ] */
+ pvi_taylor(a,b,n,y0,f,r):=block([t,h,F,T,u],
+        u[0]:y0,
+        t:a,
+        h:(b-a)/n,
+        F[0](x,y):=f(x,y),
+        F[n](x,y):=diff(F[n-1](x,y),x)+diff(F[n-1](x,y),y)*f(x,y),
+        
+        define(T(x,y),f(x,y) + sum(h^k*F[k](x,y)/(k+1)!,k,1,r-1)),
+        for i:1 step 1 thru n do (
+            u[i]:float(u[i-1]+h*T(t,u[i-1])),
+            t:t+h
+        ),
+        makelist([a+h*i, u[i]],i,0,n)
+    )$
+pvi_euler(a,b,n,y0,f):=pvi_taylor(a,b,n,y0,f,1)$
+pvi_euler_mejorado(a,b,n,y0,f):=block([u,h,t],
+    u[0]:y0,
+    t:a,
+    h:(b-a)/n,
+    for i:1 thru n do (
+        u[i]:float(u[i-1] + h*f(t+h/2,u[i-1]+ h/2*f(t,u[i-1]))),
+        t:t+h
+        ),
+        makelist([a+h*i, u[i]],i,0,n)
+    )$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Ejercicio 1: 10-5
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+[a, b]: [0, 2]$
+[n, y0]: [10, 0.5]$
+l(t,y):=y-t^2+1$
+y(t):=(t+1)^2-0.5*%e^t$
+u:pvi_euler(a,b,n,y0,l);
+makelist([float(y(a + i*(b-a)/n)), u[i]], i, 0, n);
+plot2d([float(y(x)), [discrete, u]], [x,a,b])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Ejercicio 2: 10-5
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+[a, b]: [0, 1]$
+[n, y0]: [10, 0]$
+l(t,y):=sqrt(y)$
+y(t):=t^2/4$
+u:pvi_euler(a,b,n,y0,l);
+makelist([float(y(a + i*(b-a)/n)), u[i]], i, 0, n);
+plot2d([float(y(x)), [discrete, u]], [x,a,b])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: title   start ]
+Ejercicio 1
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+a) En primer lugar calculamos las aproximaciones con cada método:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+[a,b]: [1,2]$
+[n,y0]: [10,float(-1/log(2))]$
+l(t,y):=y^2/(1+t)$
+y(t):=-1/log(t+1)$
+
+ap[0]:pvi_taylor(a,b,n,y0,l,1)$
+ap[1]:pvi_taylor(a,b,n,y0,l,4)$
+ap[2]:pvi_euler_mejorado(a,b,n,y0,l)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+A continuación vemos los errores: las columnas se corresponden
+con los errores de los métodos de Taylor de orden 2, Taylor de orden 4 
+y Euler mejorado respectivamente. Como vemos los errores del método de 
+Taylor de orden 4 son órdenes de magnitud menores que el resto.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+
+ex:makelist(float(y(a+j*(b-a)/n)),j,0,n)$
+transpose(apply(matrix,
+    makelist(makelist(ap[i][j][2]-ex[j],j,1,n+1),i,0,2)
+));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+b) Método del punto medio. Definimos el método del punto medio:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+pvi_punto_medio(a,b,n,u0,u1,f):=block([u,t,h],
+    u[0]:u0,
+    u[1]:u1,
+    h:(b-a)/n,
+    t:a+h,
+    for i:2 thru n do(
+        u[i]:float(u[i-2] + 2*h*f(t,u[i-1])),
+        t:t+h
+    ),
+      makelist([a+h*i, u[i]],i,0,n)
+    )$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+A continuación calculamos las aproximaciones de cada método:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+[a,b]: [1,2]$
+[n,u0]: [10,float(-1/log(2))]$
+l(t,y):=y^2/(1+t)$
+y(t):=-1/log(t+1)$
+
+u1_euler: u0 + (b-a)/n*l(a,u0)$
+u1_mejorado: u0 + (b-a)/n*l(a+(b-a)/(2*n),u0+ (b-a)/(2*n)*l(a,u0))$
+ap[0]:pvi_punto_medio(a,b,n,u0,u1_euler,l)$
+ap[1]:pvi_punto_medio(a,b,n,u0,u1_mejorado,l)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Los errores quedan:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ex:makelist(float(y(a+j*(b-a)/n)),j,0,n)$
+transpose(apply(matrix,
+    makelist(makelist(ap[i][j][2]-ex[j],j,1,n+1),i,0,1)
+));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Como vemos las aproximaciones tomando como u1 el valor obtenido con
+el método de Euler mejorado son mejores ya que este método tiene orden 2
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: title   start ]
+Ejercicio 2
+   [wxMaxima: title   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
