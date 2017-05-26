@@ -145,5 +145,128 @@ el método de Euler mejorado son mejores ya que este método tiene orden 2
 Ejercicio 2
    [wxMaxima: title   end   ] */
 
+/* [wxMaxima: comment start ]
+a) El error de truncatura local del método puede obtenerse:
+
+1/h(yj - u*j) = 1/h(-h^3/12*y''(xi)) = M*h^2
+
+donde hemos utilizado el error del método del trapecio.
+Como vemos el método es de orden 2
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+pvi_crank_nicholson(a,b,n,u0,f):=block([u,t,h],
+    u[0]:u0,
+    h:(b-a)/n,
+    t:a+h,
+    for i:1 thru n do(
+        u[i]:float(newton(x-(u[i-1] + h/2*(f(t-h, u[i-1] + f(t, x)))), x, u[i-1], 10^(-4))),
+        t:t+h
+    ),
+      makelist([a+h*i, u[i]],i,0,n)
+    )$
+load(newton1)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+[a,b]: [0,2]$
+[n,u0]: [10, 3]$
+l(t,y):=y-t^2$
+y(t):=%e^t+t^2+2*t+2$
+
+u_cn[1]: pvi_crank_nicholson(a,b,n,u0,l)$
+u_cn[2]: pvi_euler_mejorado(a,b,n,u0,l)$
+ex:makelist(float(y(a+j*(b-a)/n)),j,0,n)$
+transpose(apply(matrix,
+    makelist(makelist(u_cn[i][j][2]-ex[j],j,1,n+1),i,1,2)
+));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: title   start ]
+Ejercicio 9
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: input   start ] */
+pvi_heun(a,b,n,y0,f):=block([u,h,t,K],
+    u[0]:y0,
+    t:a,
+    h:(b-a)/n,
+    for i:1 thru n do (
+        K:f(t, u[i-1]),
+        u[i]:float(u[i-1] + h/2*(K+f(t+h,u[i-1]+h*K))),
+        t:t+h
+        ),
+        makelist([a+h*i, u[i]],i,0,n)
+    )$
+pvi_runge_kutta_4(a,b,n,y0,f):=block([u,h,t,K1,K2,K3],
+    u[0]:y0,
+    t:a,
+    h:(b-a)/n,
+    for i:1 thru n do (
+        K1:f(t, u[i-1]),
+        K2:f(t+h/2, u[i-1]+h/2*K1),
+        K3:f(t+h/2, u[i-1]+h/2*K2),
+        K4:f(t+h, u[i-1]+h*K3),
+        u[i]:float(u[i-1] + h/6*(K1+2*K2+2*K3+K4)),
+        t:t+h
+        ),
+        makelist([a+h*i, u[i]],i,0,n)
+    )$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+[a,b]: [1,2]$
+[n,u0]: [10,float(-1/log(2))]$
+l(t,y):=y^2/(1+t)$
+y(t):=-1/log(t+1)$
+
+u_solucion[1]: pvi_heun(a,b,n,u0,l)$
+u_solucion[2]: pvi_runge_kutta_4(a,b,n,u0,l)$
+u_solucion[3]: pvi_taylor(a,b,n,u0,l,2)$
+u_solucion[4]: pvi_taylor(a,b,n,u0,l,4)$
+ex:makelist(float(y(a+j*(b-a)/n)),j,0,n)$
+transpose(apply(matrix,
+    makelist(makelist(u_solucion[i][j][2]-ex[j],j,1,n+1),i,1,4)
+));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: title   start ]
+Ejercicio 12
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+TODO: Adams_Bashforth, que no está hecho (está copiado del del punto medio)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+pvi_adams_bashforth(a,b,n,u0,metodo_inicial,f,pasos):=block([u,t,h],
+    u[0]:u0,
+    h:(b-a)/n,
+    t:a+h,
+    for i:2 thru n do(
+        u[i]:float(u[i-2] + 2*h*f(t,u[i-1])),
+        t:t+h
+    ),
+      makelist([a+h*i, u[i]],i,0,n)
+    )$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+[a,b]: [0,1]$
+[n,u0]: [10,1]$
+l(t,y):=(2-2*t*y)/(1+t^2)$
+y(t):=(2*t+1)/(t^2+2)$
+
+u_ab[1]: adams_bashforth(a,b,n,u0,pvi_euler,l)$
+u_ab[2]: adams_bashforth(a,b,n,u0,pvi_euler_mejorado,l)$
+u_ab[3]: adams_bashforth(a,b,n,u0,pvi_runge_kutta_4,l)$
+ex:makelist(float(y(a+j*(b-a)/n)),j,0,n)$
+transpose(apply(matrix,
+    makelist(makelist(u_ab[i][j][2]-ex[j],j,1,n+1),i,1,3)
+));
+
+/* [wxMaxima: input   end   ] */
+
 /* Maxima can't load/batch files which end with a comment! */
 "Created with wxMaxima"$
