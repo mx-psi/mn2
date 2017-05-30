@@ -5,3 +5,4 @@
 
 load("MétodosT1.mac")$
 load("MétodosT2.mac")$
+load("MétodosT3.mac")$

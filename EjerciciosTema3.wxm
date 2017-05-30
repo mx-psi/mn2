@@ -1,65 +1,49 @@
 /* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
-/* [ Created with wxMaxima version 15.10.0-unofficial ] */
-
-/* [wxMaxima: input   start ] */
- pvi_taylor(a,b,n,y0,f,r):=block([t,h,F,T,u],
-        u[0]:y0,
-        t:a,
-        h:(b-a)/n,
-        F[0](x,y):=f(x,y),
-        F[n](x,y):=diff(F[n-1](x,y),x)+diff(F[n-1](x,y),y)*f(x,y),
-        
-        define(T(x,y),f(x,y) + sum(h^k*F[k](x,y)/(k+1)!,k,1,r-1)),
-        for i:1 step 1 thru n do (
-            u[i]:float(u[i-1]+h*T(t,u[i-1])),
-            t:t+h
-        ),
-        makelist([a+h*i, u[i]],i,0,n)
-    )$
-pvi_euler(a,b,n,y0,f):=pvi_taylor(a,b,n,y0,f,1)$
-pvi_euler_mejorado(a,b,n,y0,f):=block([u,h,t],
-    u[0]:y0,
-    t:a,
-    h:(b-a)/n,
-    for i:1 thru n do (
-        u[i]:float(u[i-1] + h*f(t+h/2,u[i-1]+ h/2*f(t,u[i-1]))),
-        t:t+h
-        ),
-        makelist([a+h*i, u[i]],i,0,n)
-    )$
-/* [wxMaxima: input   end   ] */
+/* [ Created with wxMaxima version 16.04.2 ] */
 
 /* [wxMaxima: comment start ]
-Ejercicio 1: 10-5
+   Ejercicios del Tema 3 de Métodos Numéricos II
+Pablo Baeyens Fernández y José Manuel Muñoz Fuentes
+
+Esta línea debe ejecutarse antes que las siguientes:
    [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("MétodosT3.mac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Ejercicio 1 (ejercicio 1 del 10/5)
+   [wxMaxima: section end   ] */
 
 /* [wxMaxima: input   start ] */
 [a, b]: [0, 2]$
 [n, y0]: [10, 0.5]$
 l(t,y):=y-t^2+1$
 y(t):=(t+1)^2-0.5*%e^t$
-u:pvi_euler(a,b,n,y0,l);
-makelist([float(y(a + i*(b-a)/n)), u[i]], i, 0, n);
-plot2d([float(y(x)), [discrete, u]], [x,a,b])$
+v:pvi_euler(a,b,n,y0,l);
+makelist([float(y(a + i*(b-a)/n)), v[i][2]], i, 1, n+1);
+plot2d([float(y(x)), [discrete, v]], [x,a,b])$
 /* [wxMaxima: input   end   ] */
 
-/* [wxMaxima: comment start ]
-Ejercicio 2: 10-5
-   [wxMaxima: comment end   ] */
+/* [wxMaxima: section start ]
+Ejercicio 2 (ejercicio 2 del 10/5)
+   [wxMaxima: section end   ] */
 
 /* [wxMaxima: input   start ] */
 [a, b]: [0, 1]$
 [n, y0]: [10, 0]$
 l(t,y):=sqrt(y)$
 y(t):=t^2/4$
-u:pvi_euler(a,b,n,y0,l);
-makelist([float(y(a + i*(b-a)/n)), u[i]], i, 0, n);
-plot2d([float(y(x)), [discrete, u]], [x,a,b])$
+u1:pvi_euler(a,b,n,y0,l);
+u2:pvi_euler(a,b,n,10^(-5),l);
+makelist([float(y(a + i*(b-a)/n)), u1[i][2], u2[i][2]], i, 1, n+1);
+plot2d([float(y(x)), [discrete, u1], [discrete, u2]], [x,a,b])$
 /* [wxMaxima: input   end   ] */
 
-/* [wxMaxima: title   start ]
-Ejercicio 1
-   [wxMaxima: title   end   ] */
+/* [wxMaxima: section start ]
+Ejercicio 3 (ejercicio 1 del 17/5)
+   [wxMaxima: section end   ] */
 
 /* [wxMaxima: comment start ]
 a) En primer lugar calculamos las aproximaciones con cada método:
@@ -84,7 +68,6 @@ Taylor de orden 4 son órdenes de magnitud menores que el resto.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-
 ex:makelist(float(y(a+j*(b-a)/n)),j,0,n)$
 transpose(apply(matrix,
     makelist(makelist(ap[i][j][2]-ex[j],j,1,n+1),i,0,2)
@@ -92,25 +75,8 @@ transpose(apply(matrix,
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-b) Método del punto medio. Definimos el método del punto medio:
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-pvi_punto_medio(a,b,n,u0,u1,f):=block([u,t,h],
-    u[0]:u0,
-    u[1]:u1,
-    h:(b-a)/n,
-    t:a+h,
-    for i:2 thru n do(
-        u[i]:float(u[i-2] + 2*h*f(t,u[i-1])),
-        t:t+h
-    ),
-      makelist([a+h*i, u[i]],i,0,n)
-    )$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-A continuación calculamos las aproximaciones de cada método:
+b) Método del punto medio. Calculamos aproximaciones de u1 con dos métodos distintos
+y a continuación calculamos las aproximaciones con el método del punto medio:
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
@@ -141,9 +107,9 @@ Como vemos las aproximaciones tomando como u1 el valor obtenido con
 el método de Euler mejorado son mejores ya que este método tiene orden 2
    [wxMaxima: comment end   ] */
 
-/* [wxMaxima: title   start ]
-Ejercicio 2
-   [wxMaxima: title   end   ] */
+/* [wxMaxima: section start ]
+Ejercicio 4 (ejercicio 2 del 17/5)
+   [wxMaxima: section end   ] */
 
 /* [wxMaxima: comment start ]
 a) El error de truncatura local del método puede obtenerse:
@@ -153,21 +119,6 @@ a) El error de truncatura local del método puede obtenerse:
 donde hemos utilizado el error del método del trapecio.
 Como vemos el método es de orden 2
    [wxMaxima: comment end   ] */
-
-
-/* [wxMaxima: input   start ] */
-pvi_crank_nicholson(a,b,n,u0,f):=block([u,t,h],
-    u[0]:u0,
-    h:(b-a)/n,
-    t:a+h,
-    for i:1 thru n do(
-        u[i]:float(newton(x-(u[i-1] + h/2*(f(t-h, u[i-1] + f(t, x)))), x, u[i-1], 10^(-4))),
-        t:t+h
-    ),
-      makelist([a+h*i, u[i]],i,0,n)
-    )$
-load(newton1)$
-/* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
 [a,b]: [0,2]$
@@ -183,37 +134,9 @@ transpose(apply(matrix,
 ));
 /* [wxMaxima: input   end   ] */
 
-/* [wxMaxima: title   start ]
+/* [wxMaxima: section start ]
 Ejercicio 9
-   [wxMaxima: title   end   ] */
-
-/* [wxMaxima: input   start ] */
-pvi_heun(a,b,n,y0,f):=block([u,h,t,K],
-    u[0]:y0,
-    t:a,
-    h:(b-a)/n,
-    for i:1 thru n do (
-        K:f(t, u[i-1]),
-        u[i]:float(u[i-1] + h/2*(K+f(t+h,u[i-1]+h*K))),
-        t:t+h
-        ),
-        makelist([a+h*i, u[i]],i,0,n)
-    )$
-pvi_runge_kutta_4(a,b,n,y0,f):=block([u,h,t,K1,K2,K3],
-    u[0]:y0,
-    t:a,
-    h:(b-a)/n,
-    for i:1 thru n do (
-        K1:f(t, u[i-1]),
-        K2:f(t+h/2, u[i-1]+h/2*K1),
-        K3:f(t+h/2, u[i-1]+h/2*K2),
-        K4:f(t+h, u[i-1]+h*K3),
-        u[i]:float(u[i-1] + h/6*(K1+2*K2+2*K3+K4)),
-        t:t+h
-        ),
-        makelist([a+h*i, u[i]],i,0,n)
-    )$
-/* [wxMaxima: input   end   ] */
+   [wxMaxima: section end   ] */
 
 /* [wxMaxima: input   start ] */
 [a,b]: [1,2]$
@@ -231,26 +154,13 @@ transpose(apply(matrix,
 ));
 /* [wxMaxima: input   end   ] */
 
-/* [wxMaxima: title   start ]
+/* [wxMaxima: section start ]
 Ejercicio 12
-   [wxMaxima: title   end   ] */
+   [wxMaxima: section end   ] */
 
 /* [wxMaxima: comment start ]
-TODO: Adams_Bashforth, que no está hecho (está copiado del del punto medio)
+TODO: Adams_Bashforth no está programado en MetodosT3.mac
    [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-pvi_adams_bashforth(a,b,n,u0,metodo_inicial,f,pasos):=block([u,t,h],
-    u[0]:u0,
-    h:(b-a)/n,
-    t:a+h,
-    for i:2 thru n do(
-        u[i]:float(u[i-2] + 2*h*f(t,u[i-1])),
-        t:t+h
-    ),
-      makelist([a+h*i, u[i]],i,0,n)
-    )$
-/* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
 [a,b]: [0,1]$

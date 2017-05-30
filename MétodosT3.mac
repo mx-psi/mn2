@@ -1,0 +1,109 @@
+/****************************************************************\
+**       Métodos requeridos en los ejercicios del Tema 3        **
+** Autores: Pablo Baeyens Fernández y José Manuel Muñoz Fuentes **
+\****************************************************************/
+
+/* Métodos de Taylor de orden r para resolver el PVI */
+/* Incluye el método de Euler, que es el de Taylor de orden 1 */
+
+pvi_taylor(a, b, n, y0, f, r) := block([t,h,F,T,u],
+  u[0]: y0,
+  t: a,
+  h: (b-a)/n,
+  F[0](x,y) := f(x,y),
+  F[n](x,y) := diff(F[n-1](x,y),x)+diff(F[n-1](x,y),y)*f(x,y),
+
+  define(T(x,y), f(x,y) + sum(h^k*F[k](x,y)/(k+1)!, k, 1, r-1)),
+  for i:1 thru n do (
+    u[i]: float(u[i-1] + h*T(t, u[i-1])),
+    t: t+h
+  ),
+  makelist([a+h*i, u[i]], i, 0, n)
+)$
+
+pvi_euler(a, b, n, y0, f) := pvi_taylor(a, b, n, y0, f, 1)$
+
+/* Método de Euler mejorado para resolver el PVI */
+/* Es un método de Runge-Kutta de orden 2 */
+
+pvi_euler_mejorado(a, b, n, y0, f) := block([u,h,t],
+  u[0]: y0,
+  t: a,
+  h: (b-a)/n,
+  for i:1 thru n do (
+    u[i]: float(u[i-1] + h*f(t+h/2,u[i-1]+ h/2*f(t,u[i-1]))),
+    t: t+h
+  ),
+  makelist([a+h*i, u[i]], i, 0, n)
+)$
+
+/*    Método del punto medio para resolver el PVI. Nótese que se trata de un método de dos pasos:    */
+/* u1 es una aproximación del valor en el segundo nodo obtenida con otro método para resolver el PVI */
+
+pvi_punto_medio(a, b, n, u0, u1, f) := block([u,t,h],
+  u[0]: u0,
+  u[1]: u1,
+  h: (b-a)/n,
+  t: a+h,
+  for i:2 thru n do(
+    u[i]: float(u[i-2] + 2*h*f(t, u[i-1])),
+    t: t+h
+  ),
+  makelist([a+h*i, u[i]], i, 0, n)
+)$
+
+/* Método del trapecio o de Crank-Nicholson para resolver el PVI */
+/*  Es implícito: es necesario encontrar el cero de una función  */
+/* Esto lo hacemos con la función newton, que aplica el método de Newton-Raphson */
+
+load(newton1)$
+pvi_crank_nicholson(a, b, n, u0, f) := block([u,t,h],
+  u[0]: u0,
+  h: (b-a)/n,
+  t: a+h,
+  for i:1 thru n do(
+    u[i]: float(newton(x-(u[i-1] + h/2*(f(t-h, u[i-1] + f(t, x)))), x, u[i-1], 10^(-4))),
+    t: t+h
+  ),
+  makelist([a+h*i, u[i]], i, 0, n)
+)$
+
+/* Método de Heun para resolver el PVI */
+/* Es un método de Runge-Kutta de orden 2 */
+
+pvi_heun(a, b, n, y0, f) := block([u,h,t,K],
+  u[0]: y0,
+  t: a,
+  h: (b-a)/n,
+  for i:1 thru n do (
+    K: f(t, u[i-1]),
+    u[i]: float(u[i-1] + h/2*(K + f(t+h, u[i-1] + h*K))),
+    t: t+h
+  ),
+  makelist([a+h*i, u[i]], i, 0, n)
+)$
+
+/* El método de Runge-Kutta de orden 4 */
+/* Es un método de Runge-Kutta de orden 4 aparentemente muy usado */
+
+pvi_runge_kutta_4(a, b, n, y0, f) := block([u,h,t,K1,K2,K3],
+  u[0]: y0,
+  t: a,
+  h: (b-a)/n,
+  for i:1 thru n do (
+    K1: f(t,     u[i-1]),
+    K2: f(t+h/2, u[i-1] + h/2*K1),
+    K3: f(t+h/2, u[i-1] + h/2*K2),
+    K4: f(t+h,   u[i-1] + h*K3),
+    u[i]: float(u[i-1] + h/6*(K1 + 2*K2 + 2*K3 + K4)),
+    t: t+h
+  ),
+  makelist([a+h*i, u[i]], i, 0, n)
+)$
+
+/* Método de Adams-Bashforth */
+/* Requiere pasarle un método para obtener los valores en los primeros nodos */
+
+pvi_adams_bashforth(a, b, n, u0, metodo_inicial, f, pasos) := block([]
+  /* TODO */
+)$
