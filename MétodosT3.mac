@@ -135,7 +135,6 @@ pvi_adams_bashforth(a, b, n, y0, metodo_inicial, f, k) := block([u,h,t,m],
 /* Usando formula_adams_moulton[k] se puede visualizar la fórmula particular para k pasos */
 formula_adams_moulton[k](h, ftu, t) := factor(integrate(pn(ftu, makelist(t-(k-i)*h, i, 0, k)), x, t-h, t))$
 
-load("MétodosT2.mac")$   /* Para obtener el polinomio de interpolación */
 pvi_adams_moulton(a, b, n, y0, metodo_inicial, f, k) := block([u,h,t,m],
   h: (b-a)/n,
   t: a+h*k,
@@ -143,6 +142,7 @@ pvi_adams_moulton(a, b, n, y0, metodo_inicial, f, k) := block([u,h,t,m],
   f_(t) := f(t, u[(t-a)/h]),
   for i:0 thru k-1 do u[i]: m[i+1][2],
   for i:k thru n do (
+    u[i]: x,
     u[i]: float(newton(x-(u[i-1] + formula_adams_moulton[k](h, f_, t)), x, u[i-1], 10^(-4))),
     t: t+h
   ),
