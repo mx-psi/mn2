@@ -55,6 +55,7 @@ pvi_punto_medio(a, b, n, u0, u1, f) := block([u,t,h],
 /* Método del trapecio o de Crank-Nicholson para resolver el PVI */
 /*  Es implícito: es necesario encontrar el cero de una función  */
 /* Esto lo hacemos con la función newton, que aplica el método de Newton-Raphson */
+/* Tomamos como aproximación inicial el valor en el nodo anterior */
 
 load(newton1)$
 pvi_crank_nicholson(a, b, n, u0, f) := block([u,t,h],
@@ -101,9 +102,49 @@ pvi_runge_kutta_4(a, b, n, y0, f) := block([u,h,t,K1,K2,K3],
   makelist([a+h*i, u[i]], i, 0, n)
 )$
 
-/* Método de Adams-Bashforth */
-/* Requiere pasarle un método para obtener los valores en los primeros nodos */
+/*  Método de Adams-Bashforth. Se trata de un método multipaso que estima el valor en el  */
+/* siguiente nodo usando la integral del polinomio que interpola los k valores anteriores */
+/* El método de k pasos se calcula una sola vez para cada k y cada ejecución del programa */
+/* Requiere pasar como parámetro un método para obtener los valores en los primeros nodos */
 
-pvi_adams_bashforth(a, b, n, u0, metodo_inicial, f, pasos) := block([]
-  /* TODO */
+/* Usando formula_adams_bashforth[k] se puede visualizar la fórmula particular para k pasos */
+formula_adams_bashforth[k](h, ftu, t) := factor(integrate(pn(ftu, makelist(t-(k-i)*h, i, 0, k-1)), x, t-h, t))$
+
+load("MétodosT2.mac")$   /* Para obtener el polinomio de interpolación */
+pvi_adams_bashforth(a, b, n, y0, metodo_inicial, f, k) := block([u,h,t,m],
+  h: (b-a)/n,
+  t: a+h*k,
+  m: metodo_inicial(a, t, k, y0, f),
+  f_(t) := f(t, u[(t-a)/h]),
+  for i:0 thru k-1 do u[i]: m[i+1][2],
+  for i:k thru n do (
+    u[i]: float(u[i-1] + formula_adams_bashforth[k](h, f_, t)),
+    t: t+h
+  ),
+  makelist([a+h*i, u[i]], i, 0, n)
+)$
+
+/* Método de Adams-Moulton. Se trata de un método multipaso implícito que estima el valor */
+/* en el siguiente nodo con la integral del polinomio que interpola los k valores previos */
+/* El método de k pasos se calcula una sola vez para cada k y cada ejecución del programa */
+/* Requiere pasar como parámetro un método para obtener los valores en los primeros nodos */
+/* Es implícito: requiere encontrar el cero de una función */
+/* Esto lo hacemos con la función newton, que aplica el método de Newton-Raphson */
+/* Tomamos como aproximación inicial el valor en el nodo anterior */
+
+/* Usando formula_adams_moulton[k] se puede visualizar la fórmula particular para k pasos */
+formula_adams_moulton[k](h, ftu, t) := factor(integrate(pn(ftu, makelist(t-(k-i)*h, i, 0, k)), x, t-h, t))$
+
+load("MétodosT2.mac")$   /* Para obtener el polinomio de interpolación */
+pvi_adams_moulton(a, b, n, y0, metodo_inicial, f, k) := block([u,h,t,m],
+  h: (b-a)/n,
+  t: a+h*k,
+  m: metodo_inicial(a, t, k, y0, f),
+  f_(t) := f(t, u[(t-a)/h]),
+  for i:0 thru k-1 do u[i]: m[i+1][2],
+  for i:k thru n do (
+    u[i]: float(newton(x-(u[i-1] + formula_adams_moulton[k](h, f_, t)), x, u[i-1], 10^(-4))),
+    t: t+h
+  ),
+  makelist([a+h*i, u[i]], i, 0, n)
 )$

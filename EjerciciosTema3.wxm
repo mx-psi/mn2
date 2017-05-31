@@ -158,24 +158,19 @@ transpose(apply(matrix,
 Ejercicio 12
    [wxMaxima: section end   ] */
 
-/* [wxMaxima: comment start ]
-TODO: Adams_Bashforth no está programado en MetodosT3.mac
-   [wxMaxima: comment end   ] */
-
 /* [wxMaxima: input   start ] */
 [a,b]: [0,1]$
-[n,u0]: [10,1]$
+[n,u0]: [10,1/2]$
 l(t,y):=(2-2*t*y)/(1+t^2)$
 y(t):=(2*t+1)/(t^2+2)$
 
-u_ab[1]: adams_bashforth(a,b,n,u0,pvi_euler,l)$
-u_ab[2]: adams_bashforth(a,b,n,u0,pvi_euler_mejorado,l)$
-u_ab[3]: adams_bashforth(a,b,n,u0,pvi_runge_kutta_4,l)$
+u_ab[1]: pvi_adams_bashforth(a,b,n,u0,pvi_euler,l,4)$
+u_ab[2]: pvi_adams_bashforth(a,b,n,u0,pvi_euler_mejorado,l,4)$
+u_ab[3]: pvi_adams_bashforth(a,b,n,u0,pvi_runge_kutta_4,l,4)$
 ex:makelist(float(y(a+j*(b-a)/n)),j,0,n)$
 transpose(apply(matrix,
     makelist(makelist(u_ab[i][j][2]-ex[j],j,1,n+1),i,1,3)
 ));
-
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */

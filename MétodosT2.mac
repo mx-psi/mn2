@@ -11,6 +11,13 @@ dd(f, v):=block([n:length(v),df],
     else (dd(f, makelist(v[i],i,1,n-1))-dd(f, makelist(v[i],i,2,n)))/(v[1]-v[n])
 )$
 
+/* Diferencias divididas de datos discretos */
+
+dd_discreto(d):=block([n:length(d)],
+  if n = 1 then d[1][2] else
+  (dd_discreto(makelist(d[i], i, 1, n-1))-dd_discreto(makelist(d[i],i,2,n)))/(d[1][1]-d[n][1])
+)$
+
 
 /* Elemento i-ésimo de la base de Lagrange */
 
@@ -33,6 +40,14 @@ pn(f, v) := sum(
     makelist(v[j],j,1,i))*
     product(x-v[j], j, 1, i-1)
   , i, 1, length(v)
+)$
+
+/* Polinomio de interpolación mediante base de Newton de datos discretos */
+
+pn_discreto(d) := sum(
+    dd_discreto(makelist(d[j],j,1,i))*
+    product(x-d[j][1], j, 1, i-1)
+  , i, 1, length(d)
 )$
 
 /* FDN de tipo interpolatorio */
