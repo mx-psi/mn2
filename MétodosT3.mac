@@ -110,7 +110,8 @@ pvi_runge_kutta_4(a, b, n, y0, f) := block([u,h,t,K1,K2,K3],
 /* Usando formula_adams_bashforth[k] se puede visualizar la fórmula particular para k pasos */
 formula_adams_bashforth[k](h, ftu, t) := factor(integrate(pn(ftu, makelist(t-(k-i)*h, i, 0, k-1)), x, t-h, t))$
 
-load("MétodosT2.mac")$   /* Para obtener el polinomio de interpolación */
+/* Para obtener el polinomio de interpolación utilizamos los métodos del tema anterior */
+load(sconcat(pathname_directory(load_pathname), "MétodosT2.mac"))$
 pvi_adams_bashforth(a, b, n, y0, metodo_inicial, f, k) := block([u,h,t,m],
   h: (b-a)/n,
   t: a+h*k,

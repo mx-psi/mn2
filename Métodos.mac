@@ -3,6 +3,6 @@
 ** Autores: Pablo Baeyens Fernández y José Manuel Muñoz Fuentes **
 \****************************************************************/
 
-load("MétodosT1.mac")$
-load("MétodosT2.mac")$
-load("MétodosT3.mac")$
+load(sconcat(pathname_directory(load_pathname), "MétodosT1.mac"))$
+load(sconcat(pathname_directory(load_pathname), "MétodosT2.mac"))$
+load(sconcat(pathname_directory(load_pathname), "MétodosT3.mac"))$
